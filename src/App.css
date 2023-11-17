@@ -1,0 +1,15 @@
+.body {
+    padding: 10px;
+}
+.title {
+    padding: 10px;
+}
+.item {
+    display: flex;
+    align-items: center;
+}
+.button {
+    margin-left: 10px;
+    width: fit-content;
+    height: fit-content;
+}
