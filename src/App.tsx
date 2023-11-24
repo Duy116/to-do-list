@@ -1,63 +1,47 @@
 import React from 'react';
 import './App.css';
 import Task from './Task';
+import { useAppSelector, useAppDispatch } from './util/hook';
+import { todoAdded, todoDelete } from './util/reducer';
 
-interface MainProps {
-  title: string;
-};
+function App() {
+  const [ newTask, setNewTask ] = React.useState("");
+  const todos = useAppSelector((state) => state)
+  const dispatch = useAppDispatch();
 
-interface MainState {
-  newTask: string;
-  notification: string;
-  list: string[];
-};
-
-class App extends React.Component<MainProps, MainState> {
-  state: MainState = {
-    newTask: "",
-    notification: "",
-    list: [],
-  };
-  
-  handleAdd = () => {
-    this.state.list.push(this.state.newTask);
+  const handleAdd = () => {
+    dispatch(todoAdded(newTask))
     const input = document.getElementById("inputTask") as HTMLInputElement | null;
     if (input != null) {
       input.value = "";
     }
-    this.forceUpdate();
+    console.log(todos);
   }
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newTask: e.target.value});
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTask(e.target.value);
   }
 
-  handleDelete = (name: string) => {
-    const index = this.state.list.indexOf(name, 0);
-    if (index > -1) {
-      this.state.list.splice(index, 1);
-      this.forceUpdate();
-    }
+  const handleDelete = (id: number) => {
+    dispatch(todoDelete(id))
   }
 
-  render() {
-    return (
-      <div className='body'>
-        <h1 className="title">{this.props.title}</h1>
-        <div>
-          <input id='inputTask' onChange={this.handleChange}/>
-          <button className='button' onClick={this.handleAdd}>Add</button>
-        </div>
-        <ul>
-          {this.state.list.map(item => 
-            <li>
-              <Task name={item} onDelete={() => this.handleDelete(item)}/>
-            </li>
-          )}
-        </ul>
+  return (
+    <div className='body'>
+      <h1 className="title">To do list</h1>
+      <div>
+        <input id='inputTask' onChange={handleChange}/>
+        <button className='button' onClick={handleAdd}>Add</button>
       </div>
-    );
-  }
+      <ul>
+        {todos.map(item => 
+          <li>
+            <Task name={item.text} onDelete={() => handleDelete(item.id)} isDone={item.completed}/>
+          </li>
+        )}
+      </ul>
+    </div>
+  );
 }
 
 export default App;
