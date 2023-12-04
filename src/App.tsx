@@ -6,7 +6,7 @@ import { todoAdded, todoDelete } from './util/reducer';
 
 function App() {
   const [ newTask, setNewTask ] = React.useState("");
-  const todos = useAppSelector((state) => state)
+  const todos = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   const handleAdd = () => {
